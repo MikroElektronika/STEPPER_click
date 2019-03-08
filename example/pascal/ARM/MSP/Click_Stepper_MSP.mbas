@@ -1,0 +1,90 @@
+{*
+Example for STEPPER Click
+
+    Date          : Jun 2018.
+    Author        : Nemanja Medakovic
+
+Test configuration MSP :
+    
+    MCU              : MSP432
+    Dev. Board       : Clicker 2 for MSP432
+    ARM Compiler ver : v6.0.0.0
+
+---
+
+Description :
+
+The application is composed of three sections :
+
+- System Initialization - Initializes all GPIO pins found on STEPPER Click and timer to 1ms interrupt.
+- Application Initialization - First segment initializes driver and stepper control. Second segment 
+setup movement limits, maximum and minimum speed, and acceleration ratio. Third segment enables motor 
+and setup new route which will be called from application task.
+- Application Task - (code snippet) - Sequentialy moves motor. First part of sequence executes movement
+until the end. Second part stop motor movement after one second and continues sequence after two seconds.
+
+*}
+program Click_STEPPER_MSP;
+
+uses Click_STEPPER_types, Click_STEPPER_config, Click_STEPPER_timer;
+
+var
+    tmpBuffer : array[256] of uint32_t; 
+    myStepper : T_stepper_obj; 
+    
+procedure systemInit(); 
+begin
+
+    //mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_INT_PIN, _GPIO_INPUT); 
+    //mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_AN_PIN, _GPIO_OUTPUT); 
+    //mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_RST_PIN, _GPIO_OUTPUT); 
+    //mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_CS_PIN, _GPIO_OUTPUT); 
+    //mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_PWM_PIN, _GPIO_OUTPUT); 
+
+    stepper_confgTimer(); 
+    Delay_ms(100); 
+
+end;
+
+procedure applicationInit(); 
+begin
+
+    stepper_gpioDriverInit(T_STEPPER_P(@_MIKROBUS1_GPIO)); 
+    stepper_ctlInit(T_STEPPER_P(@_MIKROBUS1_GPIO), T_STEPPER_OBJ_P(@myStepper)); 
+    stepper_cfgInit(256, @tmpBuffer[0], 1000.0, T_STEPPER_OBJ_P(@myStepper));   // BUFFER SIZE, POINTER, STEPS PER SEC
+
+    stepper_setBorder(0x00000000, 0xFFFFFFFF, T_STEPPER_OBJ_P(@myStepper));     // UPPER AND LOWER BORDER
+    stepper_setSpeed(10.0, 100.0, 0.1, T_STEPPER_OBJ_P(@myStepper));            // MIN AND MAX SPEED, ACCELERATION
+    
+    stepper_enable(_STEPPER_ENABLED, T_STEPPER_OBJ_P(@myStepper));             // ENABLE MOTOR DRIVER
+    stepper_setRoute(_STEPPER_DIR_CW, 200, T_STEPPER_OBJ_P(@myStepper));       // CLOCKWISE, 200 STEPS
+
+end;
+
+procedure applicationTask(); 
+begin
+
+    stepper_start(T_STEPPER_OBJ_P(@myStepper)); 
+    while (myStepper.status.running) do 
+    begin 
+	    stepper_process(T_STEPPER_OBJ_P(@myStepper));
+    end;
+	Delay_ms(2000);
+    
+    stepper_start(T_STEPPER_OBJ_P(@myStepper)); 
+    Delay_ms(1000); 
+    stepper_stop(T_STEPPER_OBJ_P(@myStepper)); 
+    Delay_ms(2000); 
+
+end;
+
+begin
+
+    systemInit(); 
+    applicationInit(); 
+    while (1) do 
+    begin 
+        applicationTask(); 
+    end;
+
+end.

@@ -1,0 +1,28 @@
+'
+' Use mikroE Timer Calculator to generate proper timer configuration
+' and timer ISR.
+'
+' https://www.mikroe.com/timer-calculator
+'
+module Click_STEPPER_timer
+
+include Click_STEPPER_types
+
+dim
+    myStepper as T_stepper_obj external 
+    
+sub procedure stepper_confgTimer() 
+
+implements
+
+sub procedure stepper_confgTimer() 
+
+end sub
+
+sub procedure Timer_interrupt() 
+
+    stepper_tick(T_STEPPER_OBJ_P(@myStepper)) 
+
+end sub
+
+end.

@@ -1,0 +1,5 @@
+module Click_STEPPER_config
+
+include Click_STEPPER_types
+
+end.

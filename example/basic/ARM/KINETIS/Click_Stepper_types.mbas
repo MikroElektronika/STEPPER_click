@@ -1,0 +1,73 @@
+module Click_STEPPER_types
+
+typedef uint8_t                 as byte
+typedef int8_t                  as short
+typedef uint16_t                as word
+typedef int16_t                 as integer
+typedef uint32_t                as longword
+typedef int32_t                 as longint
+
+typedef T_STEPPER_P       	   as ^const uint8_t
+typedef T_STEPPER_OBJ_P    		   as ^uint8_t
+
+typedef T_stepper_gpioSetFp    as sub procedure( dim state as uint8_t)
+typedef T_stepper_gpioSetFp_   as ^T_stepper_gpioSetFp
+
+structure T_stepper_ctl
+
+    dim fpDir                   as T_stepper_gpioSetFp_
+    dim fpStep                  as T_stepper_gpioSetFp_
+    dim fpEnable                as T_stepper_gpioSetFp_
+    dim fpStepMode1				as T_stepper_gpioSetFp_
+    dim fpStepMode2				as T_stepper_gpioSetFp_
+
+end structure
+
+structure T_stepper_status
+
+    dim position                as uint32_t
+    dim target                	as uint32_t
+    dim timer               	as uint32_t
+
+    dim direction               as uint8_t
+    dim running               	as uint8_t
+    dim operation               as uint8_t
+
+end structure
+
+structure T_stepper_cfg
+
+    dim borderMin               as uint32_t
+    dim borderMax               as uint32_t
+
+    dim accelRatio              as float
+
+    dim speedMin                as float
+    dim speedMax                as float
+
+end structure
+
+structure T_stepper_route
+
+    dim position                as uint32_t  
+    dim positionAcc             as uint32_t  
+
+    dim accelStop               as uint32_t  
+    dim accelStart              as uint32_t  
+
+    dim routeMax                as uint32_t  
+    dim routeTimer              as ^uint32_t
+
+end structure
+
+structure T_stepper_obj
+
+    dim control                 as T_stepper_ctl       
+    dim config                  as T_stepper_cfg       
+    dim status                  as T_stepper_status    
+    dim route                   as T_stepper_route     
+
+end structure
+
+
+end.

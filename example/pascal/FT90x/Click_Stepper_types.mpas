@@ -1,0 +1,68 @@
+unit Click_STEPPER_types;
+
+type uint8_t  = byte;
+type int8_t   = short;
+type uint16_t = word;
+type int16_t  = integer;
+type uint32_t = dword;
+type int32_t  = longint;
+
+type T_STEPPER_P = ^const uint8_t;
+type T_STEPPER_OBJ_P = ^uint8_t;
+
+type T_stepper_gpioSetFp       = procedure( state: uint8_t );
+
+type T_stepper_ctl = record
+
+    fpDir                   	: ^T_stepper_gpioSetFp;
+    fpStep                  	: ^T_stepper_gpioSetFp;
+    fpEnable                	: ^T_stepper_gpioSetFp;
+    fpStepMode1					: ^T_stepper_gpioSetFp;
+    fpStepMode2					: ^T_stepper_gpioSetFp;
+
+end;
+
+type T_stepper_status = record
+
+    position                	: uint32_t;
+    target                		: uint32_t;
+    timer               		: uint32_t;
+    direction               	: uint8_t;
+    running               		: uint8_t;
+    operation               	: uint8_t;
+
+end;
+
+type T_stepper_cfg = record
+
+    borderMin                   : uint32_t;
+    borderMax                   : uint32_t;
+    accelRatio                  : real;
+    speedMin                    : real;
+    speedMax                    : real;
+
+end;
+
+type T_stepper_route = record
+
+    position                	: uint32_t;
+    positionAcc             	: uint32_t;
+    accelStop               	: uint32_t;
+    accelStart              	: uint32_t;
+    routeMax                	: uint32_t;
+    routeTimer              	: ^uint32_t;
+
+end;
+
+type T_stepper_obj = record
+
+    control                 	: T_stepper_ctl;
+    config                  	: T_stepper_cfg;      
+    status                  	: T_stepper_status;
+    route                   	: T_stepper_route;
+
+end;
+
+implementation
+
+end.

@@ -1,0 +1,33 @@
+{*
+
+Use mikroE Timer Calculator to generate proper timer configuration
+and timer ISR.
+
+https://www.mikroe.com/timer-calculator
+
+*}
+unit Click_STEPPER_timer;
+
+uses Click_STEPPER_types;
+
+var
+    myStepper : T_stepper_obj; external; 
+
+procedure stepper_confgTimer(); 
+
+implementation
+
+procedure stepper_confgTimer(); 
+begin
+
+
+end;
+
+procedure Timer_interrupt(); 
+begin
+
+    stepper_tick(T_STEPPER_OBJ_P(@myStepper)); 
+
+end;
+
+end.
